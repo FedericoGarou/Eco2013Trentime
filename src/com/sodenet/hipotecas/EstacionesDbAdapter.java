@@ -7,29 +7,22 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 
-public class HipotecaDbAdapter {
+public class EstacionesDbAdapter {
 
 	//
 	// Definimos constante con el nombre de la tabla
 	//
-	public static final String C_TABLA = "HIPOTECA" ;
+	public static final String C_TABLA = "ESTACIONES" ;
 	
     //
     // Definimos constantes con el nombre de las columnas de la tabla
     //
     public static final String C_COLUMNA_ID	= "_id";
-    public static final String C_COLUMNA_NOMBRE = "hip_nombre";
-    public static final String C_COLUMNA_CONDICIONES = "hip_condiciones";
-    public static final String C_COLUMNA_CONTACTO = "hip_contacto";
-    public static final String C_COLUMNA_EMAIL = "hip_email";
-    public static final String C_COLUMNA_TELEFONO = "hip_telefono";
-    public static final String C_COLUMNA_OBSERVACIONES = "hip_observaciones";
-    public static final String C_COLUMNA_PASIVO = "hip_pasivo_sn";
-    public static final String C_COLUMNA_SITUACION = "hip_sit_id";
+    public static final String C_COLUMNA_NOMBRE = "estacion_nombre";
 
 
     private Context contexto;
-    private HipotecaDbHelper dbHelper;
+    private EstacionesDbHelper dbHelper;
     private SQLiteDatabase db;
 
     //
@@ -37,23 +30,16 @@ public class HipotecaDbAdapter {
     //
     private String[] columnas = new String[]{
             C_COLUMNA_ID,
-            C_COLUMNA_NOMBRE,
-            C_COLUMNA_CONDICIONES,
-            C_COLUMNA_CONTACTO,
-            C_COLUMNA_EMAIL,
-            C_COLUMNA_TELEFONO,
-            C_COLUMNA_OBSERVACIONES,
-            C_COLUMNA_PASIVO,
-            C_COLUMNA_SITUACION} ;
+            C_COLUMNA_NOMBRE} ;
 
-	public HipotecaDbAdapter(Context context)
+	public EstacionesDbAdapter(Context context)
 	{
 		this.contexto = context;
 	}
 
-	public HipotecaDbAdapter abrir() throws SQLException
+	public EstacionesDbAdapter abrir() throws SQLException
 	{
-		dbHelper = new HipotecaDbHelper(contexto);
+		dbHelper = new EstacionesDbHelper(contexto);
 		db = dbHelper.getWritableDatabase();
 		return this;
 	}
@@ -69,7 +55,7 @@ public class HipotecaDbAdapter {
      */
     public Cursor getCursor(String filtro) throws SQLException
     {
-        Cursor c = db.query( true, C_TABLA, columnas, filtro, null, null, null, null, null);
+        Cursor c = db.query( true, C_TABLA, columnas,filtro, null, null, null, null, null);
 
         return c;
     }
@@ -96,7 +82,7 @@ public class HipotecaDbAdapter {
 		if (db == null)
 			abrir();
 		
-		return db.insert(C_TABLA, null, reg);
+		return db.insert(C_TABLA, null,reg);
 	}
 	
 	/**
@@ -107,7 +93,7 @@ public class HipotecaDbAdapter {
 		if (db == null)
 			abrir();
 		
-		return db.delete(C_TABLA, "_id=" + id, null);
+		return db.delete(C_TABLA, "_id=" + id,null);
 	}
 	
     /**

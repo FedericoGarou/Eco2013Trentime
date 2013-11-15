@@ -8,12 +8,18 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="173dp"/>
 
     <TextView
         android:id="@id/android:empty"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="74dp"
         android:text="@string/lista_vacia" />
-    
+
+    <Spinner
+        android:id="@id/cbEstaciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
 </LinearLayout>

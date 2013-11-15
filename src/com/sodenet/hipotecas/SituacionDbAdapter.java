@@ -20,7 +20,7 @@ public class SituacionDbAdapter {
     public static final String C_COLUMNA_NOMBRE = "sit_nombre";
 
 	private Context contexto;
-	private HipotecaDbHelper dbHelper;
+	private EstacionesDbHelper dbHelper;
 	private SQLiteDatabase db;
 
     /**
@@ -35,7 +35,7 @@ public class SituacionDbAdapter {
 
 	public SituacionDbAdapter abrir() throws SQLException
 	{
-		dbHelper = new HipotecaDbHelper(contexto);
+		dbHelper = new EstacionesDbHelper(contexto);
 		db = dbHelper.getWritableDatabase();
 		return this;
 	}

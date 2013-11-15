@@ -14,17 +14,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sodenet.hipotecas.Hipoteca"
+            android:name=".SeleccionEstaciones"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.sodenet.hipotecas.HipotecaFormulario"
-            android:label="@string/title_activity_hipoteca_formulario" >
         </activity>
         <activity android:name=".Configuracion" android:label="Configuracion"/>
     </application>

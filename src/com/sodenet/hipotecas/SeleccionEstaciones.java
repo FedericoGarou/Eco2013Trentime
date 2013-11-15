@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 
-public class Hipoteca extends ListActivity {
+public class SeleccionEstaciones extends ListActivity {
 	
     public static final String C_MODO  = "modo" ;
     public static final int C_VISUALIZAR = 551 ;
@@ -26,10 +28,11 @@ public class Hipoteca extends ListActivity {
     public static final int C_ELIMINAR = 554 ;
     public static final int C_CONFIGURAR = 555 ;
 		
-	private HipotecaDbAdapter dbAdapter;
+	private EstacionesDbAdapter dbAdapter;
     private Cursor cursor; 
-    private HipotecaCursorAdapter hipotecaAdapter ;
+    private EstacionCursorAdapter estacionAdapter ;
     private ListView lista;
+    private Spinner cbEstaciones;
 
     private String filtro ;
 	
@@ -41,9 +44,26 @@ public class Hipoteca extends ListActivity {
         getPreferencias();
 
         lista = (ListView) findViewById(android.R.id.list);
+        cbEstaciones = (Spinner) findViewById(R.id.cbEstaciones);
 
-        dbAdapter = new HipotecaDbAdapter(this);
+        dbAdapter = new EstacionesDbAdapter(this);
         dbAdapter.abrir();
+
+        //
+        // Creamos el adaptador de Situacion
+        //
+        dbAdapter = new EstacionesDbAdapter(this) ;
+        dbAdapter.abrir();
+
+        cursor = dbAdapter.getCursor(filtro);
+
+        SimpleCursorAdapter adapterEstaciones = new SimpleCursorAdapter(this,android.R.layout.simple_spinner_item,cursor,new String[] {EstacionesDbAdapter.C_COLUMNA_NOMBRE}, new int[] {android.R.id.text1});
+
+        adapterEstaciones.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        cbEstaciones.setAdapter(adapterEstaciones);
+
+
 
         consultar();
 
@@ -54,8 +74,8 @@ public class Hipoteca extends ListActivity {
     {
         cursor = dbAdapter.getCursor(filtro);
         startManagingCursor(cursor);
-        hipotecaAdapter = new HipotecaCursorAdapter(this, cursor);
-        lista.setAdapter(hipotecaAdapter);
+        estacionAdapter = new EstacionCursorAdapter(this, cursor);
+        lista.setAdapter(estacionAdapter);
     }
 		
 	@Override
@@ -68,11 +88,12 @@ public class Hipoteca extends ListActivity {
 	private void visualizar(long id)
 	{
 		// Llamamos a la Actividad HipotecaFormulario indicando el modo visualización y el identificador del registro 
-		Intent i = new Intent(Hipoteca.this, HipotecaFormulario.class);
+		/*Intent i = new Intent(SeleccionEstaciones.this, HipotecaFormulario.class);
 		i.putExtra(C_MODO, C_VISUALIZAR);
-		i.putExtra(HipotecaDbAdapter.C_COLUMNA_ID, id);
-										
+		i.putExtra(EstacionesDbAdapter.C_COLUMNA_ID, id);
+
 		startActivityForResult(i, C_VISUALIZAR);
+		*/
 	}
 	
 	@Override
@@ -90,14 +111,15 @@ public class Hipoteca extends ListActivity {
 
         switch (item.getItemId())
         {
+            /*
             case R.id.menu_crear:
-                i = new Intent(Hipoteca.this, HipotecaFormulario.class);
+                i = new Intent(SeleccionEstaciones.this, HipotecaFormulario.class);
                 i.putExtra(C_MODO, C_CREAR);
                 startActivityForResult(i, C_CREAR);
-                return true;
+                return true;*/
 
             case R.id.menu_preferencias:
-                i = new Intent(Hipoteca.this, Configuracion.class);
+                i = new Intent(SeleccionEstaciones.this, Configuracion.class);
                 startActivityForResult(i, C_CONFIGURAR);
                 return true;
         }
@@ -147,7 +169,7 @@ public class Hipoteca extends ListActivity {
 
 			public void onClick(DialogInterface dialog, int boton) {
 				dbAdapter.delete(id);
-				Toast.makeText(Hipoteca.this, R.string.hipoteca_eliminar_confirmacion, Toast.LENGTH_SHORT).show();
+				Toast.makeText(SeleccionEstaciones.this, R.string.hipoteca_eliminar_confirmacion, Toast.LENGTH_SHORT).show();
 				consultar();				
 			}
 		});
@@ -161,7 +183,7 @@ public class Hipoteca extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		
-		menu.setHeaderTitle(cursor.getString(cursor.getColumnIndex(HipotecaDbAdapter.C_COLUMNA_NOMBRE)));
+		menu.setHeaderTitle(cursor.getString(cursor.getColumnIndex(EstacionesDbAdapter.C_COLUMNA_NOMBRE)));
 		menu.add(Menu.NONE, C_VISUALIZAR, Menu.NONE, R.string.menu_visualizar);
 		menu.add(Menu.NONE, C_EDITAR, Menu.NONE, R.string.menu_editar);
 		menu.add(Menu.NONE, C_ELIMINAR, Menu.NONE, R.string.menu_eliminar);
@@ -183,13 +205,14 @@ public class Hipoteca extends ListActivity {
 	    		visualizar(info.id);
 				return true;
 				
-	    	case C_EDITAR:
-	    		i = new Intent(Hipoteca.this, HipotecaFormulario.class);
+	    	/*case C_EDITAR:
+	    		i = new Intent(SeleccionEstaciones.this, HipotecaFormulario.class);
 	    		i.putExtra(C_MODO, C_EDITAR);
-	    		i.putExtra(HipotecaDbAdapter.C_COLUMNA_ID, info.id);
+	    		i.putExtra(EstacionesDbAdapter.C_COLUMNA_ID, info.id);
 				
 	    		startActivityForResult(i, C_EDITAR);
 				return true;
+	        */
 	    }
 	    return super.onContextItemSelected(item);
 	}
@@ -201,15 +224,16 @@ public class Hipoteca extends ListActivity {
         //
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (preferencias.getBoolean("ocultar_registros_pasivos", false))
+       /* if (preferencias.getBoolean("ocultar_registros_pasivos", false))
         {
             // si se ocultan registros pasivos filtramos solamente los que tengan el valor 'N'
-            this.filtro = HipotecaDbAdapter.C_COLUMNA_PASIVO + " = 'N' " ;
+            this.filtro = EstacionesDbAdapter.C_COLUMNA_PASIVO + " = 'N' " ;
         }
         else
         {
             // si no se ocultan registros pasivos no filtramos
             this.filtro = null ;
         }
+        */
     }
 }

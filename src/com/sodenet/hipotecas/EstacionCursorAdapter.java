@@ -9,15 +9,15 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.graphics.Color;
 
-public class HipotecaCursorAdapter extends CursorAdapter
+public class EstacionCursorAdapter extends CursorAdapter
 {
 	
-	private HipotecaDbAdapter dbAdapter = null ;
+	private EstacionesDbAdapter dbAdapter = null ;
 	
-	public HipotecaCursorAdapter(Context context, Cursor c)
+	public EstacionCursorAdapter(Context context, Cursor c)
 	{
 		super(context, c);
-		dbAdapter = new HipotecaDbAdapter(context);
+		dbAdapter = new EstacionesDbAdapter(context);
 		dbAdapter.abrir();
 	}
 
@@ -26,9 +26,10 @@ public class HipotecaCursorAdapter extends CursorAdapter
     {
         TextView tv = (TextView) view ;
 
-        tv.setText(cursor.getString(cursor.getColumnIndex(HipotecaDbAdapter.C_COLUMNA_NOMBRE)));
+        tv.setText(cursor.getString(cursor.getColumnIndex(EstacionesDbAdapter.C_COLUMNA_NOMBRE)));
 
-        if (cursor.getString(cursor.getColumnIndex(HipotecaDbAdapter.C_COLUMNA_PASIVO)).equals("S"))
+        /*
+        if (cursor.getString(cursor.getColumnIndex(EstacionesDbAdapter.)).equals("S"))
         {
             tv.setTextColor(Color.GRAY);
         }
@@ -36,6 +37,7 @@ public class HipotecaCursorAdapter extends CursorAdapter
         {
             tv.setTextColor(Color.BLACK);
         }
+        */
     }
 
 	@Override
